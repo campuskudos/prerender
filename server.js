@@ -1,13 +1,12 @@
-#!/usr/bin/env node
-var prerender = require('./lib');
+module.exports = require('./lib');
 
-var server = prerender();
+const prerender = require('./lib');
 
-server.use(prerender.sendPrerenderHeader());
-server.use(prerender.browserForceRestart());
-// server.use(prerender.blockResources());
-server.use(prerender.addMetaTags());
-server.use(prerender.removeScriptTags());
-server.use(prerender.httpHeaders());
+const server = prerender({
+  followRedirects: true,
+  chromeLocation: '/usr/bin/google-chrome',
+  chromeFlags: [ '--no-sandbox', '--headless', '--disable-gpu', '--remote-debugging-port=9222', '--hide-scrollbars' ],
+})
 
-server.start();
+server.use(require('prerender-memory-cache'))
+server.start()
