@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  app_build:
     runs-on: ubuntu-latest
     env:
       APP_NAME: prerender
@@ -38,10 +38,15 @@ jobs:
           echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_OUTPUT
           echo "ENV=$ENV" >> $GITHUB_OUTPUT
 
+      - name: Google Authentication using Workload Identity Federation (Prod regions)
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: ${{ secrets.PROD_WORKLOAD_IDENTITY }}
+          service_account: ${{ secrets.PROD_WI_SERVICE_ACCOUNT }}
+          access_token_lifetime: '600s'
+
       - name: Google autheticate (prod-us)
         uses: google-github-actions/auth@v0
-        with:
-          credentials_json: ${{ secrets.PROD_GCP_CREDENTIALS }}
 
       # Doing Docker authentication
       - name: GCR authentication
