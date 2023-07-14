@@ -1,5 +1,7 @@
 FROM browserless/chrome
+
 USER root
+
 WORKDIR /usr/src/app
 
 COPY . .
