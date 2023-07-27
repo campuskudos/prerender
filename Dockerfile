@@ -14,7 +14,7 @@ WORKDIR "/home/node"
 COPY . .
 
 # install npm packages
-RUN npm install --no-package-lock
+RUN yarn install --pure-lockfile
 
 EXPOSE 3000
 
