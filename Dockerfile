@@ -16,7 +16,7 @@ COPY . .
 # install npm packages
 RUN yarn install --pure-lockfile
 
-EXPOSE 3000
+EXPOSE 3010
 
 ENTRYPOINT ["tini", "--"]
 CMD ["node", "server.js"]

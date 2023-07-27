@@ -6,6 +6,7 @@ const prerender = require('./lib');
 const prMemoryCache = require('prerender-memory-cache');
 
 const server = prerender({
+  port: 3010,
   chromeFlags: [
     '--no-sandbox',
     '--headless',
