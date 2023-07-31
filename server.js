@@ -1,17 +1,33 @@
 module.exports = require('./lib');
 
-// library import
+'use strict';
+
 const prerender = require('./lib');
+const prMemoryCache = require('prerender-memory-cache');
 
 const server = prerender({
-  followRedirects: true,
-  chromeLocation: '/usr/bin/google-chrome',
-  chromeFlags: [ '--no-sandbox', '--headless', '--disable-gpu', '--remote-debugging-port=9222', '--hide-scrollbars' ],
+  port: 3010,
+  chromeFlags: [
+    '--no-sandbox',
+    '--headless',
+    '--disable-gpu',
+    '--remote-debugging-port=9222',
+    '--hide-scrollbars',
+    '--disable-dev-shm-usage',
+  ],
+  forwardHeaders: true,
+  chromeLocation: '/usr/bin/chromium-browser',
   pageLoadTimeout: 30 * 1000,
-  waitAfterLastRequest: 1 * 1000,
-  followRedirects: true,
-})
+});
 
-server.use(require('prerender-memory-cache'));
-server.use(prerender.basicAuth());
-server.start()
+const memCache = Number(process.env.MEMORY_CACHE) || 0;
+if (memCache === 1) {
+  server.use(prMemoryCache);
+}
+
+// server.use(prerender.blacklist());
+// server.use(prerender.pgSiteNotFoundChecker());
+server.use(prerender.httpHeaders());
+server.use(prerender.removeScriptTags());
+
+server.start();

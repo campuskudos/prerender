@@ -1,13 +1,22 @@
-FROM browserless/chrome
+FROM node:16-alpine
 
-USER root
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROME_PATH=/usr/lib/chromium/
+ENV MEMORY_CACHE=0
 
-WORKDIR /usr/src/app
+# install chromium, tini and clear cache
+RUN apk add --update-cache chromium tini \
+ && rm -rf /var/cache/apk/* /tmp/*
+
+USER node
+WORKDIR "/home/node"
 
 COPY . .
 
-RUN npm install
+# install npm packages
+RUN yarn install --pure-lockfile
 
-EXPOSE 3000
+EXPOSE 3010
 
-CMD [ "npm", "run", "start" ]
+ENTRYPOINT ["tini", "--"]
+CMD ["node", "server.js"]
