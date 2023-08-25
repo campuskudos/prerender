@@ -17,7 +17,7 @@ const server = prerender({
   ],
   forwardHeaders: true,
   chromeLocation: '/usr/bin/chromium-browser',
-  pageLoadTimeout: 30 * 1000,
+  pageLoadTimeout: 60 * 1000,
 });
 
 const memCache = Number(process.env.MEMORY_CACHE) || 0;
